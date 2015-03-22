@@ -4,7 +4,7 @@ A tiny script to allow an image to fill its container without altering its aspec
 
 ## How It Works
 
-The script compares the aspect ratio of the image, and its containers, and applies a class based on whether the image's height or width needs to be set to fill the space (because width or height would be greater than that of the container if it was set to fill the space using the class applied)
+The script compares the aspect ratio of the image, and its container, and applies a class based on whether the image's height or width needs to be set to fill the space (because width or height would be greater than that of the container if it was set to fill the space using the class applied)
 
 CSS can then be used from this point
 
