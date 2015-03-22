@@ -34,7 +34,7 @@ With jQuery:
 
     $('#example-img').imageFit({
         // required properties
-        container: document.getElementById('example-container'),
+        container: $('#example-container'),
 
         // optional properties
         resize: true,
