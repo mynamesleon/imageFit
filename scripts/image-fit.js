@@ -124,7 +124,7 @@
             img.onerror = function () {
                 addClass(data.img, ['fitted-error']);
             };
-            img.src = data.img.getAttribute('src');
+            img.src = data.img.src;
         },
 
         /*
