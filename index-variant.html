@@ -22,20 +22,21 @@
             <img id="example-img" alt="example image" src="test-image.jpg" />
         </div>
 
+        <script type="text/javascript" src="scripts/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="scripts/custom-resize.min.js"></script>
-        <script type="text/javascript" src="scripts/image-fit.js"></script>
+        <script type="text/javascript" src="scripts/jquery/image-fit.js"></script>
         <script type="text/javascript">
             // example usage
             window.imageFit({
                 // required properties
-                img: document.getElementById('example-img'),
-                container: document.getElementById('example-container'),
+                img: $('#example-img'),
+                container: $('#example-container'),
 
                 // optional properties
                 resize: true, // true by default,
                 objectFit: false, // true by default - adds 'obj-fit' class (if supported) instead of 'tall' or 'wide' classes
                 useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent), // false by default - apply negative marginTop or marginLeft equal to half height or half width of the image
-                customResize: true, // true by default - use customResize function (if available), and if resize is true
+                customResize: false, // true by default - use customResize function (if available), and if resize is true
 
                 // callbacks
                 onCheck: function () {}, // before aspect ratio check and classes are added

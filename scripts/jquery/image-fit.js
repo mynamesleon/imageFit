@@ -1,62 +1,13 @@
 /*
- * imageFit - jQuery optional variant
+ * jQuery dependent imageFit variant
  */
-(function () {
+
+(function ($) {
     'use strict';
 
     var funcs = [],
         objFit = window.document.createElement('div').style.objectFit !== undefined,
         resizeTimer,
-
-        /*
-         * Check if element has class
-         * @param {element}: element to check
-         * @param {string}: class to check
-         * @return {boolean}: whether element has that class
-         */
-        hasClass = function (e, c) {
-            return e.className.indexOf(c) > -1;
-        },
-
-        /*
-         * Trim string
-         * @param {string}: string to trim
-         * @return {string}: trimmed string
-         */
-        trim = function (s) {
-            return s.replace(/^\s+|\s+$/gm, '');
-        },
-
-        /*
-         * Add class(es) to element
-         * @param {element}: element to add class(es) to
-         * @param {array}: class(es) to add
-         */
-        addClass = function (e, c) {
-            var i = 0;
-            for (i; i < c.length; i += 1) {
-                if (c.hasOwnProperty(i)) {
-                    if (!hasClass(e, c[i])) { // check elem doesn't have class already
-                        e.className = trim(e.className) + ' ' + c[i];
-                    }
-                }
-            }
-        },
-
-        /*
-         * Remove class(es) from element
-         * @param {element}: element to remove class(es) from
-         * @param {array}: class(es) to remove
-         */
-        removeClass = function (e, c) {
-            var i = 0;
-            for (i; i < c.length; i += 1) {
-                if (c.hasOwnProperty(i)) {
-                    e.className = e.className.replace(c[i], '');
-                }
-            }
-            e.className = trim(e.className); // remove white space
-        },
 
         /*
          * Function check
@@ -75,26 +26,36 @@
          * @param {object}: original data object from imageFit function
          */
         setImgClasses = function (data) {
-            removeClass(data.img, ['fitted-tall', 'fitted-wide']);
+            var $img = $(data.img),
+                $container = $(data.container),
+                aspectRatio,
+                containerAspectRatio,
+                imageType;
+            
+            $img.removeClass('fitted-tall fitted-wide');
 
             // fire callback at aspect check stage
             checkCallback(data.onCheck);
 
-            var aspectRatio = (data.img.clientHeight / data.img.clientWidth) * 100,
-                containerAspectRatio = (data.container.clientHeight / data.container.clientWidth) * 100,
-                imageType = aspectRatio < containerAspectRatio ? 'fitted-tall' : 'fitted-wide';
+            aspectRatio = ($img.height() / $img.width()) * 100;
+            containerAspectRatio = ($container.height() / $container.width()) * 100;
+            imageType = aspectRatio < containerAspectRatio ? 'fitted-tall' : 'fitted-wide';
 
-            addClass(data.img, ['fitted', imageType]);
+            $img.addClass('fitted ' + imageType);
 
             // margin check - apply negative marginTop or marginLeft
             if (data.useMargins) {
-                addClass(data.img, ['fitted-margins']);
+                $img.addClass('fitted-margins');
                 if (imageType === 'fitted-tall') {
-                    data.img.style.marginLeft = -(data.img.clientWidth / 2) + 'px'; // need to get width again after class added
-                    data.img.style.marginTop = '';
+                    $img.css({
+                        marginLeft: -($img.width() / 2) + 'px', // need to get width again after class added
+                        marginTop: ''
+                    });
                 } else {
-                    data.img.style.marginLeft = '';
-                    data.img.style.marginTop = -(data.img.clientHeight / 2) + 'px'; // need to get height again after class added
+                    $img.css({
+                        marginLeft: '',
+                        marginTop: -($img.height() / 2) + 'px' // need to get height again after class added
+                    });
                 }
             }
 
@@ -111,27 +72,28 @@
 
             // use object fit if supported
             if (data.objectFit !== false && objFit) {
-                addClass(data.img, ['fitted', 'fitted-object-fit']);
+                $(data.img).addClass('fitted fitted-object-fit');
                 return;
             }
 
-            img.onload = function () {
-                setImgClasses(data);
-                // push all data info to funcs array to call in resize later
-                if (data.resize !== false) {
-                    if (data.customResize !== false && window.customResize !== undefined) {
-                        window.customResize.bind(function () {
-                            setImgClasses(data);
-                        });
-                    } else {
-                        funcs.push(data);
+            $(img).on({
+                load: function () {
+                    setImgClasses(data);
+                    // push all data info to funcs array to call in resize later
+                    if (data.resize !== false) {
+                        if (data.customResize !== false && window.customResize !== undefined) {
+                            window.customResize.bind(function () {
+                                setImgClasses(data);
+                            });
+                        } else {
+                            funcs.push(data);
+                        }
                     }
+                },
+                error: function () {
+                    $(data.img).addClass('fitted-error');
                 }
-            };
-            img.onerror = function () {
-                addClass(data.img, ['fitted-error']);
-            };
-            img.src = data.img.src;
+            }).attr('src', data.img.src);
         },
 
         /*
@@ -181,17 +143,11 @@
     };
 
     // bind resize event
-    if (window.addEventListener) {
-        window.addEventListener('resize', callFuncs);
-    } else {
-        window.attachEvent('onresize', callFuncs);
-    }
+    $(window).on('resize', callFuncs);
 
-    if (window.jQuery) {
-        window.jQuery.fn.imageFit = function (data) {
-            data.img = this;
-            window.imageFit(data);
-        };
-    }
+    $.fn.imageFit = function (data) {
+        data.img = this;
+        window.imageFit(data);
+    };
 
-}());
+}(window.jQuery));
