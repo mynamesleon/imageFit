@@ -24,7 +24,7 @@
          * @return {string}: trimmed string
          */
         trim = function (s) {
-            return s.replace(/^\s+|\s+$/gm, '');
+            return s.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
         },
 
         /*
@@ -109,13 +109,12 @@
         initChecks = function (data) {
             var img = new Image();
 
-            // use object fit if supported
-            if (data.objectFit !== false && objFit) {
-                addClass(data.img, ['fitted', 'fitted-object-fit']);
-                return;
-            }
-
             img.onload = function () {
+                // use object fit if supported
+                if (data.objectFit !== false && objFit) {
+                    addClass(data.img, ['fitted', 'fitted-object-fit']);
+                    return;
+                }
                 setImgClasses(data);
                 // push all data info to funcs array to call in resize later
                 if (data.resize !== false) {

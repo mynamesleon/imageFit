@@ -70,14 +70,13 @@
         initChecks = function (data) {
             var img = new Image();
 
-            // use object fit if supported
-            if (data.objectFit !== false && objFit) {
-                $(data.img).addClass('fitted fitted-object-fit');
-                return;
-            }
-
             $(img).on({
                 load: function () {
+                    // use object fit if supported
+                    if (data.objectFit !== false && objFit) {
+                        $(data.img).addClass('fitted fitted-object-fit');
+                        return;
+                    }
                     setImgClasses(data);
                     // push all data info to funcs array to call in resize later
                     if (data.resize !== false) {
