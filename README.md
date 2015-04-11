@@ -61,7 +61,7 @@ The callbacks are called in the context of the selected image, so using `this` w
 - 'fitted-tall' is applied if the image needs a **height** of 100% to fill the space
 - 'fitted-margins' is applied if useMargins is set to true (and hence inline margin styling is being used to position the image)
 - 'fitted-error' is applied if an error occurs when checking if the image has loaded e.g. the image src returning a 404
-```
+
 ## Further Notes
 The function expects **one image** and **one container**, if passed more than one (in an array), it will select the first one. If no image or container is passed in, the function will fail and return false.
 
