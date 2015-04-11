@@ -32,10 +32,11 @@
                 container: document.getElementById('example-container'),
 
                 // optional properties
-                resize: true, // true by default,
                 objectFit: false, // true by default - adds 'obj-fit' class (if supported) instead of 'tall' or 'wide' classes
                 useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent), // false by default - apply negative marginTop or marginLeft equal to half height or half width of the image
+                resize: true, // true by default,
                 customResize: true, // true by default - use customResize function (if available), and if resize is true
+                checkOnResize: false, // false by default - do image load check on resize. Useful if image is likely to change via developer adjustment, picture element, etc.
 
                 // callbacks
                 onCheck: function () {}, // before aspect ratio check and classes are added

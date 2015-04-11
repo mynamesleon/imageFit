@@ -1,12 +1,13 @@
 /*
- * imageFit
+ * imageFit plugin - fit image to container without altering aspect ratio, prioritising the centre of the image
  */
 (function ($) {
     'use strict';
-
+    
     var funcs = [],
-        objFit = window.document.createElement('div').style.objectFit !== undefined,
-        jqIncl = $ !== undefined, // check if jQuery is included the page
+        objFit = typeof window.document.createElement('div').style.objectFit !== 'undefined', // check object-fit support
+        jqIncl = typeof $ !== 'undefined', // check if jQuery is included the page
+        customResizeIncl = typeof window.customResize !== 'undefined', // check if custom resize is included
         resizeTimer,
 
         /*
@@ -53,10 +54,8 @@
             var i = 0;
             c = c.split(' '); // create array from class string
             for (i; i < c.length; i += 1) {
-                if (c.hasOwnProperty(i)) {
-                    if (!hasClass(e, c[i])) { // check elem doesn't have class already
-                        e.className = trim(e.className) + ' ' + c[i];
-                    }
+                if (!hasClass(e, c[i])) { // check elem doesn't have class already
+                    e.className = trim(e.className) + ' ' + c[i];
                 }
             }
         },
@@ -75,9 +74,7 @@
             var i = 0;
             c = c.split(' '); // create array from class string
             for (i; i < c.length; i += 1) {
-                if (c.hasOwnProperty(i)) {
-                    e.className = e.className.replace(c[i], '');
-                }
+                e.className = e.className.replace(c[i], '');
             }
             e.className = trim(e.className); // remove white space
         },
@@ -86,23 +83,23 @@
          * Function check
          * @param {function}: function to fire
          */
-        checkCallback = function (f) {
+        checkCallback = function (f, i) {
             if (typeof f === 'function') {
-                f();
+                f.call(i);
             }
         },
 
         /*
-         * Compare aspect ratio of image and container and set 'tall' or 'wide' class accordingly
+         * Compare aspect ratio of image and container and set 'fitted-tall' or 'fitted-wide' class accordingly
          *      positioning adjustment expected from CSS
-         *      if marginCheck property is true, will apply negative marginTop or marginLeft accordingly
+         *      if marginCheck is true, will apply negative marginTop or marginLeft accordingly
          * @param {object}: original data object from imageFit function
          */
         setImgClasses = function (data) {
             removeClass(data.img, 'fitted-tall fitted-wide');
 
             // fire callback at aspect check stage
-            checkCallback(data.onCheck);
+            checkCallback(data.onCheck, data.img);
 
             var aspectRatio = (data.img.clientHeight / data.img.clientWidth) * 100,
                 containerAspectRatio = (data.container.clientHeight / data.container.clientWidth) * 100,
@@ -123,14 +120,53 @@
             }
 
             // fire callback once classes are set
-            checkCallback(data.onSet);
+            checkCallback(data.onSet, data.img);
+        },
+        
+        /*
+         * Resize call - fired on resize end (or in custom resize)
+         * @param {object}: original data object from imageFit function
+         */
+        resizeCall = function (data) {
+            if (data.checkOnResize) {
+                initChecks(data, false);
+            } else {
+                setImgClasses(data);
+            }
+        },
+        
+        /*
+         * Set functions to call on resize
+         * @param {object}: original data object from imageFit function
+         * @param {boolean}: whether resize should be bound - true on initial check, false later
+         *      important for if checkOnResize is true
+         */
+        bindResize = function (data, toBindResize) {
+            // check if resize should be used
+            if (!data.resize) {
+                return;
+            }
+            // prevent binding resize again when checkOnResize is true
+            if (!toBindResize) {
+                return;
+            }
+            // check if customResize is available and should be used
+            if (data.customResize !== false && customResizeIncl) {
+                window.customResize.bind(function () {
+                    resizeCall(data);
+                });
+                return;
+            }
+            // push all data info to funcs array to call in resize later
+            funcs.push(data);
         },
 
         /*
          * Add object-fit class if object-fit is supported - otherwise, check image load
          * @param {object}: original data object from imageFit function
+         * @param {boolean}: whether to bind resize events or not - important for if img load is checked on resize
          */
-        initChecks = function (data) {
+        initChecks = function (data, toBindResize) {
             var img = new Image(),
                 useObjFit = data.objectFit !== false && objFit;
             
@@ -139,19 +175,10 @@
                 addClass(data.img, 'fitted fitted-object-fit');
                 return;
             }
-
+            // set load and error events before setting src to prevent issues in old IE
             img.onload = function () {
                 setImgClasses(data);
-                // push all data info to funcs array to call in resize later
-                if (data.resize !== false) {
-                    if (data.customResize !== false && window.customResize !== undefined) {
-                        window.customResize.bind(function () {
-                            setImgClasses(data);
-                        });
-                    } else {
-                        funcs.push(data);
-                    }
-                }
+                bindResize(data, toBindResize);
             };
             img.onerror = function () {
                 addClass(data.img, 'fitted-error');
@@ -169,7 +196,7 @@
             resizeTimer = setTimeout(function () {
                 var i = 0;
                 for (i; i < funcs.length; i += 1) {
-                    setImgClasses(funcs[i]);
+                    resizeCall(funcs[i]);
                 }
             }, 100);
         };
@@ -180,18 +207,20 @@
      * @param {object}: properties...
      *      img {element}: singular expected. If passed multiple, will take first one
      *      container {element}: singular expected. If passed multiple, will take first one
-     *      resize {boolean} optional: do checks on resize - true by default
-     *      objectFit {boolean} optional: use objectFit (if supported) - true by default - adds 'obj-fit' class
-     *      useMargins {boolean} optional: to apply negative margin based on adjustment needed
+     *      objectFit {boolean} optional: use objectFit (if supported) - true by default - adds 'fitted-object-fit' class
+     *      useMargins {boolean} optional: to apply negative margin based on adjustment needed - false by default
      *          uses marginTop, or marginLeft
+     *      resize {boolean} optional: do checks on resize - true by default
      *      customResize: {boolean} optional: to use customResize function (if available), and if resize is true - true by default
-     *      onCheck {function} optional: before aspect ratio check and classes are added
-     *      onSet {function} optional: after aspect ratio check and classes are added
+     *      checkOnResize: {boolean} optional: do image load check on resize - false by default
+     *          Useful if image src is likely to change. E.g. picture element
+     *      onCheck {function} optional: before aspect ratio check and classes are added (fires on initial check and resize event)
+     *      onSet {function} optional: after aspect ratio check and classes are added (fires on initial check and resize event)
      */
     window.imageFit = function (data) {
         // ensure an image and container have been passed in
-        if (data.img === undefined || data.container === undefined || data.img === null || data.container === null) {
-            return;
+        if (typeof data.img === 'undefined' || typeof data.container === 'undefined' || data.img === null || data.container === null) {
+            return false; // return false in this case to identify the cause
         }
         // select first image if there are multiple
         if (data.img.length) {
@@ -202,7 +231,7 @@
             data.container = data.container[0];
         }
         // initialise checks
-        initChecks(data);
+        initChecks(data, true);
     };
 
     // bind resize event
@@ -219,5 +248,5 @@
             window.imageFit(data);
         };
     }
-
+    
 }(window.jQuery));
