@@ -17,6 +17,7 @@ body {
 /* module styles */
 img {
     position: absolute;
+    max-width: none;
     top: 0;
     left: 0;
     opacity: 0;

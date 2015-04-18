@@ -3,7 +3,7 @@
  */
 (function ($) {
     'use strict';
-    
+
     var funcs = [],
         objFit = typeof window.document.createElement('div').style.objectFit !== 'undefined', // check object-fit support
         jqIncl = typeof $ !== 'undefined', // check if jQuery is included the page
@@ -20,7 +20,7 @@
             if (jqIncl) {
                 return $(e).hasClass(c);
             }
-            
+
             var i = 0,
                 classes = e.className.split(' ');
             for (i; i < classes.length; i += 1) {
@@ -50,7 +50,7 @@
                 $(e).addClass(c);
                 return;
             }
-            
+
             var i = 0;
             c = c.split(' '); // create array from class string
             for (i; i < c.length; i += 1) {
@@ -70,9 +70,9 @@
                 $(e).removeClass(c);
                 return;
             }
-            
+
             var i = 0;
-            c = c.split(' '); // create array from class string
+            c = c.split(' '); // create array from class string            
             for (i; i < c.length; i += 1) {
                 e.className = e.className.replace(c[i], '');
             }
@@ -122,7 +122,7 @@
             // fire callback once classes are set
             checkCallback(data.onSet, data.img);
         },
-        
+
         /*
          * Resize call - fired on resize end (or in custom resize)
          * @param {object}: original data object from imageFit function
@@ -134,7 +134,7 @@
                 setImgClasses(data);
             }
         },
-        
+
         /*
          * Set functions to call on resize
          * @param {object}: original data object from imageFit function
@@ -143,7 +143,7 @@
          */
         bindResize = function (data, toBindResize) {
             // check if resize should be used
-            if (!data.resize) {
+            if (data.resize === false) {
                 return;
             }
             // prevent binding resize again when checkOnResize is true
@@ -169,7 +169,7 @@
         initChecks = function (data, toBindResize) {
             var img = new Image(),
                 useObjFit = data.objectFit !== false && objFit;
-            
+
             // use object fit if supported - image load detection not needed in this case
             if (useObjFit) {
                 addClass(data.img, 'fitted fitted-object-fit');
@@ -248,5 +248,5 @@
             window.imageFit(data);
         };
     }
-    
+
 }(window.jQuery));
