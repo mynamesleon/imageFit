@@ -1,6 +1,9 @@
-/*
- * imageFit plugin - fit image to container without altering aspect ratio, prioritising the centre of the image
+/* 
+ * Fit image to container without altering aspect ratio, prioritising the centre of the image
+ * Leon Slater
+ * http://mynamesleon.com
  */
+ 
 (function ($) {
     'use strict';
 
