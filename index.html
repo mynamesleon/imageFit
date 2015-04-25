@@ -23,7 +23,7 @@
         </div>
 
         <script type="text/javascript" src="scripts/custom-resize.min.js"></script>
-        <script type="text/javascript" src="scripts/image-fit.js"></script>
+        <script type="text/javascript" src="scripts/image-fit.min.js"></script>
         <script type="text/javascript">
             // example usage
             window.imageFit({
@@ -32,13 +32,14 @@
                 container: document.getElementById('example-container'),
 
                 // optional properties
-                objectFit: false, // true by default - adds 'obj-fit' class (if supported) instead of 'tall' or 'wide' classes
-                useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent), // false by default - apply negative marginTop or marginLeft equal to half height or half width of the image
+                objectFit: true, // true by default
+                useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent), // false by default
                 resize: true, // true by default,
-                customResize: true, // true by default - use customResize function (if available), and if resize is true
-                checkOnResize: false, // false by default - do image load check on resize. Useful if image is likely to change via developer adjustment, picture element, etc.
+                customResize: true, // true by default
+                checkOnResize: false, // false by default
 
                 // callbacks
+                onPreLoad: function () {}, // before image load check - will also fire on resize if checkOnResize is true
                 onCheck: function () {}, // before aspect ratio check and classes are added
                 onSet: function () {} // after aspect ratio check and classes are added
             });

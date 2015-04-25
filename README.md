@@ -20,13 +20,14 @@ window.imageFit({
     container: document.getElementById('example-container'),
 
     // optional properties
-    objectFit: true, // true by default - adds object-fit class (if supported) instead of 'tall' or 'wide' classes
+    objectFit: true, // true by default - adds 'fitted-object-fit' class (if supported) instead of 'fitted-tall' or 'fitted-wide' classes
     useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent), // false by default - apply negative marginTop or marginLeft equal to half height or half width of the image
     resize: true, // true by default,
     customResize: true, // true by default - use customResize function (if available), and if resize is true
-    checkOnResize: false, //false by default - whether to do image load check on resize. Useful if image src is likely to change. E.g. picture element
+    checkOnResize: false, // false by default - whether to do image load check on resize. Useful if image src is likely to change. E.g. picture element
 
     // callbacks
+    onPreLoad: function () {}, // before image load check - will also fire on resize if checkOnResize is true
     onCheck: function () {}, // before aspect ratio check and classes are added (fires on initial check and resize event)
     onSet: function () {} // after aspect ratio check and classes are added (fires on initial check and resize event)
 });
@@ -47,12 +48,16 @@ $('#example-img').imageFit({
     checkOnResize: false,
 
     // callbacks
+    onPreLoad: function () {},
     onCheck: function () {},
     onSet: function () {}
 });
 ```
 
 The callbacks are called in the context of the selected image, so using `this` will reference the image.
+
+### object-fit
+If `objectFit` is set to true, and the browser supports the object-fit CSS property, *all* of the callbacks and other optional paramaters will *not* be used. This is because no further JS checks are needed, because object-fit can handle all of the image positioning without any further intervention.
 
 ## Classes used
 - 'fitted' is added once the image has loaded and a calculation has been made
