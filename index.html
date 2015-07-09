@@ -22,7 +22,7 @@
             <img id="example-img" alt="example image" src="test-image.jpg" />
         </div>
 
-        <script type="text/javascript" src="scripts/custom-resize.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
         <script type="text/javascript" src="scripts/image-fit.min.js"></script>
         <script type="text/javascript">
             // example usage
@@ -33,9 +33,8 @@
 
                 // optional properties
                 objectFit: true, // true by default
-                useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent), // false by default
+                useMargins: /msie 7|msie 8/i.test(navigator.userAgent), // false by default
                 resize: true, // true by default,
-                customResize: true, // true by default
                 checkOnResize: false, // false by default
 
                 // callbacks

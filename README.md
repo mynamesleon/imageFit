@@ -1,6 +1,6 @@
 # Image Fit
 
-A tiny script to allow an image to fill its container without altering its aspect ratio, prioritising the centre of the image.
+A tiny jQuery dependent script to allow an image to fill its container without altering its aspect ratio, prioritising the centre of the image.
 
 ## How It Works
 
@@ -8,13 +8,15 @@ The script compares the aspect ratio of the image, and its container, and applie
 
 CSS can then be used from this point. Base CSS stylings are included.
 
-## Usage
-The imageFit function can be used with or without jQuery. 
+The example styles used here rely on `object-fit` in supported browsers, and the `transform` property otherwise using `translateX(-50%)` or `translateY(-50%)` to reposition the image. The script can also apply the necessary negative margins to reposition the image.
 
-Without jQuery:
+## Usage
+ImageFit can be used as a jQuery plugin or a standard function:
+
+Standard function:
 
 ```js
-window.imageFit({
+imageFit({
     // required properties
     img: document.getElementById('example-img'),
     container: document.getElementById('example-container'),
@@ -23,7 +25,6 @@ window.imageFit({
     objectFit: true, // true by default - adds 'fitted-object-fit' class (if supported) instead of 'fitted-tall' or 'fitted-wide' classes
     useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent), // false by default - apply negative marginTop or marginLeft equal to half height or half width of the image
     resize: true, // true by default,
-    customResize: true, // true by default - use customResize function (if available), and if resize is true
     checkOnResize: false, // false by default - whether to do image load check on resize. Useful if image src is likely to change. E.g. picture element
 
     // callbacks
@@ -32,8 +33,8 @@ window.imageFit({
     onSet: function () {} // after aspect ratio check and classes are added (fires on initial check and resize event)
 });
 ```
-    
-With jQuery:
+
+jQuery plugin:
 
 ```js
 $('#example-img').imageFit({
@@ -44,7 +45,6 @@ $('#example-img').imageFit({
     resize: true,
     objectFit: true,
     useMargins: /MSIE 7|MSIE 8/i.test(navigator.userAgent),
-    customResize: true,
     checkOnResize: false,
 
     // callbacks
@@ -54,7 +54,7 @@ $('#example-img').imageFit({
 });
 ```
 
-The callbacks are called in the context of the selected image, so using `this` will reference the image.
+The callbacks are called in the context of the selected image, so `this` will reference the image.
 
 ### object-fit
 If `objectFit` is set to true, and the browser supports the object-fit CSS property, *all* of the callbacks and other optional paramaters will *not* be used. This is because no further JS checks are needed, because object-fit can handle all of the image positioning without any further intervention.
@@ -68,8 +68,8 @@ If `objectFit` is set to true, and the browser supports the object-fit CSS prope
 - 'fitted-error' is applied if an error occurs when checking if the image has loaded e.g. the image src returning a 404
 
 ## Further Notes
-The function expects **one image** and **one container**, if passed more than one (in an array), it will select the first one. If no image or container is passed in, the function will fail and return false.
+The function expects **one image** and **one container**, if passed more than one, it will select the first one. If no image or container is passed in, the function will fail and return false.
 
 The `objectFit` property is true by default as, when it is supported, this means that the resize check is not needed. However, it should be noted that applying object-fit may conflict with certain animations. E.g. in current Chrome (41), using object-fit prevents an opacity transition. It also halts the object-fit property from applying until the opacity transition would have ended.
 
-The function will check the image's `currentSrc` property where possible when detecting if the image has loaded, to allow for use of `srcset` or the `<picture>` element. If the image src is likely to change at different window widths (e.g. via the the `<picture>` element), be sure to set `checkOnResize` to true, which will make the script always check that the current image src has loaded.
+The function will check the image's `currentSrc` property where possible when detecting if the image has loaded, to allow for use of `srcset` or the `<picture>` element. If the image src is likely to change at different window widths (e.g. via the `<picture>` element), be sure to set `checkOnResize` to true, which will make the script always check that the current image src has loaded.
