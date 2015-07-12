@@ -9,6 +9,12 @@ window.imageFit = window.imageFit || new function ($) {
 
     'use strict';
 
+    if (typeof $ === 'undefined') {
+        return function() {
+            throw new Error('jQuery is required');
+        };
+    }
+
     var _funcs = [],
         _objFit = typeof window.document.createElement('div').style.objectFit !== 'undefined', // check object-fit support
 

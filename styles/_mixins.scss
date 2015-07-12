@@ -1,0 +1,36 @@
+@function strip-unit($num) {
+    @return $num / ($num * 0 + 1);
+}
+
+@mixin pxtorem($property, $values...) {
+    $max: length($values);
+    $pxValues: '';
+    $remValues: '';
+
+    @for $i from 1 through $max {
+        $value: strip-unit(nth($values, $i));
+        $remValues: #{$remValues + $value / 10}rem;
+        $pxValues: #{$pxValues + $value}px;
+
+        @if $i < $max {
+            $remValues: #{$remValues + " "};
+            $pxValues: #{$pxValues + " "};
+        }
+    }
+
+    #{$property}: $pxValues;
+    #{$property}: $remValues;
+}
+
+@mixin prefixes($property, $value) {
+    -webkit-#{$property}: #{$value};
+    -moz-#{$property}: #{$value};
+    -ms-#{$property}: #{$value};
+    -o-#{$property}: #{$value};
+    #{$property}: #{$value};
+}
+
+@mixin opacity($value) {
+    opacity: #{$value};
+    filter: alpha(opacity=#{$value*100});
+}

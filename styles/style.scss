@@ -1,0 +1,70 @@
+@import 'mixins';
+
+/* defaults */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* module styles */
+.img-adjust-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    overflow: hidden;
+
+    img.img-adjust-img {
+        position: absolute;
+        max-width: none;
+        top: 0;
+        left: 0;
+        border: none;
+        outline: none;
+        @include opacity(0);
+        @include prefixes(transition, opacity 0.3s);
+    }
+
+    img.img-adjust-img.fitted-wide {
+        width: 100%;
+        height: auto;
+        top: 50%;
+        left: 0;
+        @include prefixes(transform, translateY(-50%));
+    }
+
+    img.img-adjust-img.fitted-tall {
+        height: 100%;
+        width: auto;
+        top: 0;
+        left: 50%;
+        @include prefixes(transform, translateX(-50%));
+    }
+
+    img.img-adjust-img.fitted-object-fit {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        @include prefixes(transition, none);
+    }
+
+    img.img-adjust-img.fitted-margins {
+        @include prefixes(transform, none);
+    }
+
+    .no-js & img.img-adjust-img,
+    img.img-adjust-img.fitted {
+        @include opacity(1);
+    }
+
+    .no-js & img.img-adjust-img {
+        width: 100%;
+        height: auto;
+        top: 0;
+        left: 0;
+    }
+}
