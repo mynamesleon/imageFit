@@ -10,7 +10,7 @@ window.imageFit = window.imageFit || new function ($) {
     'use strict';
 
     if (typeof $ === 'undefined') {
-        return function() {
+        return function () {
             throw new Error('jQuery is required');
         };
     }
