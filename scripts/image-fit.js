@@ -2,11 +2,11 @@
  * Fit image to container without altering aspect ratio, prioritising the centre of the image
  * Leon Slater
  * http://mynamesleon.com
- * requisites: jQuery >= 1.9.1
+ * github.com/mynamesleon/imageFit
+ * requisites: jQuery >= 1.7
  */
 
 window.imageFit = window.imageFit || new function ($) {
-
     'use strict';
 
     if (typeof $ === 'undefined') {
@@ -98,7 +98,7 @@ window.imageFit = window.imageFit || new function ($) {
                 /*
                  * resize end call
                  */
-                call: function () {
+                run: function () {
                     // do not proceed if no data was pushed into the _funcs array
                     if (!_funcs.length) {
                         return;
@@ -212,9 +212,9 @@ window.imageFit = window.imageFit || new function ($) {
             }
         };
 
-    // bind resize event once regardless and do checks for funcs to fire in _module.resize.call
+    // bind resize event once regardless and do checks for funcs to fire in _module.resize.run
     // to prevent too many event listeners being bound on the window
-    $(window).on('resize', _module.resize.call);
+    $(window).on('resize', _module.resize.run);
 
     // create jQuery plugin version
     $.fn.imageFit = function (opts) {
