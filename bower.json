@@ -9,6 +9,10 @@
   "moduleType": [
     "globals"
   ],
+  "main": [
+    "scripts/image-fit.min.js",
+    "styles/style.css",
+  ]
   "license": "GPL-3.0",
   "ignore": [
     "**/.*",
