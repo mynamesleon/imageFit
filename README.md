@@ -1,6 +1,6 @@
 # Image Fit
 
-A tiny jQuery dependent script to allow an image to fill its container without altering its aspect ratio, prioritising the centre of the image.
+A tiny script to allow an image to fill its container without altering its aspect ratio, prioritising the centre of the image.
 
 ## How It Works
 
