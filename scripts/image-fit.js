@@ -3,19 +3,13 @@
  * Leon Slater
  * http://mynamesleon.com
  * github.com/mynamesleon/imageFit
- * requisites: jQuery >= 1.7
  */
 
 window.imageFit = window.imageFit || new function ($) {
     'use strict';
 
-    if (typeof $ === 'undefined') {
-        return function () {
-            throw new Error('jQuery is required');
-        };
-    }
-
     var _funcs = [],
+        _jqIncl = typeof $ !== 'undefined',
         _objFit = typeof window.document.createElement('div').style.objectFit !== 'undefined', // check object-fit support
 
         // default options
@@ -55,6 +49,58 @@ window.imageFit = window.imageFit || new function ($) {
                 if (typeof f === 'function') {
                     f.call(c);
                 }
+            },
+
+            /*
+             * Merge to objects
+             * @param t {object}: target
+             * @param o {object}: object to merge into target
+             * @return {object}: new object from merge
+             */
+            merge: function (t, o) {
+                var n = t,
+                    i;
+                for (i in o) {
+                    if (o.hasOwnProperty(i)) {
+                        n[i] = o[i];
+                    }
+                }
+                return n;
+            },
+
+            /*
+             * Add class(es) to element
+             * @param e {element}: element to add class(es) to
+             * @param c {string}: space delimitted class(es) to add
+             */
+            addClass: function (e, c) {
+                var cur = ' ' + e.className + ' ',
+                    cs = c.split(' '),
+                    n = '',
+                    i = 0;
+
+                for (i; i < cs.length; i += 1) {
+                    if (cur.indexOf(' ' + cs[i] + ' ') === -1 && cs[i] !== '') {
+                        n += ' ' + cs[i];
+                    }
+                }
+                e.className += n;
+            },
+
+            /*
+             * Remove class(es) from element
+             * @param e {element}: element to remove class(es) from
+             * @param c {string}: space delimitted class(es) to remove
+             */
+            removeClass: function (e, c) {
+                var cur = ' ' + e.className + ' ',
+                    cs = c.split(' '),
+                    i = 0;
+
+                for (i; i < cs.length; i += 1) {
+                    cur = cur.replace(' ' + cs[i] + ' ', ' ');
+                }
+                e.className = cur.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, ''); // remove white space
             }
         },
 
@@ -123,21 +169,18 @@ window.imageFit = window.imageFit || new function ($) {
              * @param {object}: original data object from imageFit function
              */
             checkAndSet: function (opts) {
-                var $img = $(opts.img),
-                    $container = $(opts.container);
-
-                $img.removeClass('fitted-tall fitted-wide');
+                _helpers.removeClass(opts.img, 'fitted-tall fitted-wide');
                 _helpers.checkCallback(opts.onCheck, opts.img); // fire at aspect ratio check stage
 
                 var aspectRatio = (opts.img.clientHeight / opts.img.clientWidth) * 100,
                     containerAspectRatio = (opts.container.clientHeight / opts.container.clientWidth) * 100,
                     imageType = aspectRatio < containerAspectRatio ? 'fitted-tall' : 'fitted-wide';
 
-                $img.addClass('fitted ' + imageType);
+                _helpers.addClass(opts.img, 'fitted ' + imageType);
 
                 // margin check - apply negative marginTop or marginLeft
                 if (opts.useMargins) {
-                    $img.addClass('fitted-margins');
+                    _helpers.addClass(opts.img, 'fitted-margins');
                     if (imageType === 'fitted-tall') {
                         opts.img.style.marginLeft = -(opts.img.clientWidth / 2) + 'px'; // need to get width again after class added
                         opts.img.style.marginTop = '';
@@ -162,7 +205,7 @@ window.imageFit = window.imageFit || new function ($) {
 
                 // use object fit if supported - image load detection not needed in this case
                 if (useObjFit) {
-                    $(opts.img).addClass('fitted fitted-object-fit');
+                    _helpers.addClass(opts.img, 'fitted fitted-object-fit');
                     return;
                 }
 
@@ -174,25 +217,14 @@ window.imageFit = window.imageFit || new function ($) {
                     _module.resize.bind(opts, toBindResize);
                 };
                 img.onerror = function () {
-                    $(opts.img).addClass('fitted-error');
+                    _helpers.addClass(opts.img, 'fitted-error');
                 };
                 img.src = opts.img.currentSrc || opts.img.src;
             },
 
             /*
-             * Add class 'fitted-tall' or 'fitted-wide' to image based on image and container aspect ratio comparison:
-             *      'fitted-tall' if it needs height 100%, 'fitted-wide' if it needs width '100%'
-             * @param opts {object}: properties...
-             *      img {element}: singular expected. If passed multiple, will take first one
-             *      container {element}: singular expected. If passed multiple, will take first one
-             *      objectFit {boolean} optional: use objectFit (if supported) - true by default - adds 'fitted-object-fit' class
-             *      useMargins {boolean} optional: to apply negative margin based on adjustment needed - false by default
-             *          uses marginTop, or marginLeft
-             *      resize {boolean} optional: do checks on resize - true by default
-             *      checkOnResize: {boolean} optional: do image load check on resize - false by default
-             *          Useful if image src is likely to change. E.g. picture element
-             *      onCheck {function} optional: before aspect ratio check and classes are added (fires on initial check and resize event)
-             *      onSet {function} optional: after aspect ratio check and classes are added (fires on initial check and resize event)
+             * Add classes to image based on image and container aspect ratio comparison
+             * @param opts {object}: see _defaults above for properties
              */
             init: function (opts) {
                 // ensure an image and container have been passed in
@@ -208,20 +240,26 @@ window.imageFit = window.imageFit || new function ($) {
                     opts.container = opts.container[0];
                 }
                 // initialise checks
-                _module.run($.extend({}, _defaults, opts), true);
+                _module.run(_helpers.merge(_defaults, opts), true);
             }
         };
 
     // bind resize event once regardless and do checks for funcs to fire in _module.resize.run
     // to prevent too many event listeners being bound on the window
-    $(window).on('resize', _module.resize.run);
+    if (typeof window.addEventListener !== 'undefined') {
+        window.addEventListener('resize', _module.resize.run);
+    } else {
+        window.attachEvent('onresize', _module.resize.run);
+    }
 
     // create jQuery plugin version
-    $.fn.imageFit = function (opts) {
-        opts.img = this;
-        _module.init(opts);
-        return this;
-    };
+    if (_jqIncl) {
+        $.fn.imageFit = function (opts) {
+            opts.img = this;
+            _module.init(opts);
+            return this;
+        };
+    }
 
     return function (opts) {
         _module.init(opts);

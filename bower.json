@@ -1,0 +1,20 @@
+{
+  "name": "imageFit",
+  "version": "1.0.0",
+  "homepage": "https://github.com/mynamesleon/imageFit",
+  "authors": [
+    "Leon Slater <contact@mynamesleon.com>"
+  ],
+  "description": "A tiny script to adjust an image to always fill its container",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "GPL-3.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
