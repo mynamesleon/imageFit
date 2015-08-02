@@ -5,7 +5,7 @@ body {
 }
 
 /* module styles */
-.img-adjust-container {
+.image-fit-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -14,7 +14,7 @@ body {
   margin: auto;
   overflow: hidden;
 }
-.img-adjust-container img.img-adjust-img {
+.image-fit-container img.image-fit-img {
   position: absolute;
   max-width: none;
   top: 0;
@@ -29,7 +29,7 @@ body {
   -o-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
-.img-adjust-container img.img-adjust-img.fitted-wide {
+.image-fit-container img.image-fit-img.fitted-wide {
   width: 100%;
   height: auto;
   top: 50%;
@@ -40,7 +40,7 @@ body {
   -o-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-.img-adjust-container img.img-adjust-img.fitted-tall {
+.image-fit-container img.image-fit-img.fitted-tall {
   height: 100%;
   width: auto;
   top: 0;
@@ -51,7 +51,7 @@ body {
   -o-transform: translateX(-50%);
   transform: translateX(-50%);
 }
-.img-adjust-container img.img-adjust-img.fitted-object-fit {
+.image-fit-container img.image-fit-img.fitted-object-fit {
   top: 0;
   left: 0;
   width: 100%;
@@ -63,19 +63,18 @@ body {
   -o-transition: none;
   transition: none;
 }
-.img-adjust-container img.img-adjust-img.fitted-margins {
+.image-fit-container img.image-fit-img.fitted-margins {
   -webkit-transform: none;
   -moz-transform: none;
   -ms-transform: none;
   -o-transform: none;
   transform: none;
 }
-.no-js .img-adjust-container img.img-adjust-img,
-.img-adjust-container img.img-adjust-img.fitted {
+.no-js .image-fit-container img.image-fit-img, .image-fit-container img.image-fit-img.fitted {
   opacity: 1;
   filter: alpha(opacity=100);
 }
-.no-js .img-adjust-container img.img-adjust-img {
+.no-js .image-fit-container img.image-fit-img {
   width: 100%;
   height: auto;
   top: 0;

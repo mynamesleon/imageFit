@@ -7,7 +7,7 @@ body {
 }
 
 /* module styles */
-.img-adjust-container {
+.image-fit-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -16,7 +16,7 @@ body {
     margin: auto;
     overflow: hidden;
 
-    img.img-adjust-img {
+    img.image-fit-img {
         position: absolute;
         max-width: none;
         top: 0;
@@ -25,46 +25,46 @@ body {
         outline: none;
         @include opacity(0);
         @include prefixes(transition, opacity 0.3s);
-    }
 
-    img.img-adjust-img.fitted-wide {
-        width: 100%;
-        height: auto;
-        top: 50%;
-        left: 0;
-        @include prefixes(transform, translateY(-50%));
-    }
+        &.fitted-wide {
+            width: 100%;
+            height: auto;
+            top: 50%;
+            left: 0;
+            @include prefixes(transform, translateY(-50%));
+        }
 
-    img.img-adjust-img.fitted-tall {
-        height: 100%;
-        width: auto;
-        top: 0;
-        left: 50%;
-        @include prefixes(transform, translateX(-50%));
-    }
+        &.fitted-tall {
+            height: 100%;
+            width: auto;
+            top: 0;
+            left: 50%;
+            @include prefixes(transform, translateX(-50%));
+        }
 
-    img.img-adjust-img.fitted-object-fit {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        @include prefixes(transition, none);
-    }
+        &.fitted-object-fit {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            @include prefixes(transition, none);
+        }
 
-    img.img-adjust-img.fitted-margins {
-        @include prefixes(transform, none);
-    }
+        &.fitted-margins {
+            @include prefixes(transform, none);
+        }
 
-    .no-js & img.img-adjust-img,
-    img.img-adjust-img.fitted {
-        @include opacity(1);
-    }
+        .no-js &,
+        &.fitted {
+            @include opacity(1);
+        }
 
-    .no-js & img.img-adjust-img {
-        width: 100%;
-        height: auto;
-        top: 0;
-        left: 0;
+        .no-js & {
+            width: 100%;
+            height: auto;
+            top: 0;
+            left: 0;
+        }
     }
 }
