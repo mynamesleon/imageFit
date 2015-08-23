@@ -4,11 +4,15 @@ A tiny script to allow an image to fill its container without altering its aspec
 
 ## How It Works
 
+For anyone familiar with using background images and `background-size: cover;` - imageFit does that, but with image tags. 
+
+Sadly, `background-size` only works back to IE9, and its image-based counterpart `object-fit` only works for the very latest browsers. I needed a solution that could be used for content-managed images, that could be any size or aspect ratio, and would work back to IE7.
+
 The script compares the aspect ratio of the image, and its container, and applies classes to the image based on whether its height or width would need to be set to fill the space. The script checks if the image has loaded before doing these comparisons.
 
 CSS can then be used from this point. Base CSS stylings are included.
 
-The example styles used here rely on `object-fit` in supported browsers, and the `transform` property otherwise using `translateX(-50%)` or `translateY(-50%)` to reposition the image. The script can also apply the necessary negative margins to reposition the image.
+The script also includes detection of the `object-fit` property, and makes use of it in supported browsers. You can choose how to approach the others, but the sample styles included use the `transform` properties using `translateX(-50%)` or `translateY(-50%)` to reposition the image in IE9+. The script can also apply the necessary negative margins to reposition the image, which my example is doing in IE7 and 8.
 
 ## Usage
 ImageFit can be used as a jQuery plugin or a standard function:
