@@ -227,10 +227,6 @@ window.imageFit = window.imageFit || new function ($) {
              * @param opts {object}: see _defaults above for properties
              */
             init: function (opts) {
-                // ensure an image and container have been passed in
-                if (_helpers.isNullOrUndefined(opts.img) || _helpers.isNullOrUndefined(opts.container)) {
-                    return;
-                }
                 // select first image if there are multiple (or jQuery object)
                 if (opts.img.length) {
                     opts.img = opts.img[0];
@@ -238,6 +234,10 @@ window.imageFit = window.imageFit || new function ($) {
                 // select first container if there are multiple
                 if (opts.container.length) {
                     opts.container = opts.container[0];
+                }
+                // ensure an image and container have been passed in
+                if (_helpers.isNullOrUndefined(opts.img) || _helpers.isNullOrUndefined(opts.container)) {
+                    return;
                 }
                 // initialise checks
                 _module.run(_helpers.merge(_defaults, opts), true);
