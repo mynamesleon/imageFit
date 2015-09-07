@@ -32,12 +32,12 @@ window.imageFit = window.imageFit || new function ($) {
         _helpers = {
 
             /*
-             * Null or undefined check
+             * Check if element exists
              * @param p {misc}
-             * @return {boolean}: if p is null or undefined
+             * @return {boolean}: if p is null or undefined, or has length of 0
              */
-            isNullOrUndefined: function (p) {
-                return typeof p === 'undefined' || p === null;
+            isUndefinedElem: function (p) {
+                return typeof p === 'undefined' || p === null || p.length === 0;
             },
 
             /*
@@ -227,6 +227,10 @@ window.imageFit = window.imageFit || new function ($) {
              * @param opts {object}: see _defaults above for properties
              */
             init: function (opts) {
+                // ensure an image and container have been passed in
+                if (_helpers.isUndefinedElem(opts.img) || _helpers.isUndefinedElem(opts.container)) {
+                    return;
+                }
                 // select first image if there are multiple (or jQuery object)
                 if (opts.img.length) {
                     opts.img = opts.img[0];
@@ -234,10 +238,6 @@ window.imageFit = window.imageFit || new function ($) {
                 // select first container if there are multiple
                 if (opts.container.length) {
                     opts.container = opts.container[0];
-                }
-                // ensure an image and container have been passed in
-                if (_helpers.isNullOrUndefined(opts.img) || _helpers.isNullOrUndefined(opts.container)) {
-                    return;
                 }
                 // initialise checks
                 _module.run(_helpers.merge(_defaults, opts), true);

@@ -1,6 +1,6 @@
 {
   "name": "imageFit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://github.com/mynamesleon/imageFit",
   "authors": [
     "Leon Slater <contact@mynamesleon.com>"
@@ -11,7 +11,7 @@
   ],
   "main": [
     "scripts/image-fit.min.js",
-    "styles/style.css"
+    "styles/image-fit.core.css"
   ],
   "license": "GPL-3.0",
   "ignore": [
