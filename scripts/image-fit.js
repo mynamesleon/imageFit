@@ -20,15 +20,15 @@ window.imageFit = window.imageFit || new function ($) {
              * @return {element|undefined}
              */
             container: function () {
-                var e = this,
+                var e = this.parentNode,
                     r;
 
                 while (e.nodeType !== 9) { // stop at document
-                    e = e.parentNode; // set el to parent node
                     if ((' ' + e.className + ' ').indexOf(' image-fit-container ') > -1) {
                         r = e;
                         break;
                     }
+                    e = e.parentNode; // set el to parent node
                 }
                 return r;
             },
