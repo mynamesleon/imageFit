@@ -14,8 +14,24 @@ window.imageFit = window.imageFit || new function ($) {
 
         // default options
         _defaults = {
-            img: undefined,
-            container: undefined,
+
+            /*
+             * required property - container to compare image against
+             * @return {element|undefined}
+             */
+            container: function () {
+                var e = this,
+                    r;
+
+                while (e.nodeType !== 9) { // stop at document
+                    e = e.parentNode; // set el to parent node
+                    if ((' ' + e.className + ' ').indexOf(' image-fit-container ') > -1) {
+                        r = e;
+                        break;
+                    }
+                }
+                return r;
+            },
 
             // optional
             objectFit: true, // use object-fit if supported
@@ -206,16 +222,19 @@ window.imageFit = window.imageFit || new function ($) {
              * @param {boolean}: whether to bind resize events or not - important for if img load is checked on resize
              */
             run: function (opts, toBindResize) {
-                var img = new Image(),
-                    useObjFit = opts.objectFit && _objFit;
-
-                // use object fit if supported - image load detection not needed in this case
-                if (useObjFit) {
-                    _helpers.addClass(opts.img, 'fitted fitted-object-fit');
-                    return;
-                }
+                var img = new Image();
 
                 _helpers.checkCallback(opts.onPreLoad, opts.img);
+
+                // use object fit if supported
+                if (opts.objectFit && _objFit) {
+                    _helpers.addClass(opts.img, 'fitted fitted-object-fit');
+                    // set resize to allow onPreLoad callback to still be used
+                    if (opts.checkOnResize) {
+                        _module.resize.bind(opts, toBindResize);
+                    }
+                    return;
+                }
 
                 // set load and error events before setting src to prevent issues in old IE
                 img.onload = function () {
@@ -228,18 +247,14 @@ window.imageFit = window.imageFit || new function ($) {
                 img.src = opts.img.currentSrc || opts.img.src;
             },
 
-            /*
-             * Add classes to image based on image and container aspect ratio comparison
-             * @param opts {object}: see _defaults above for properties
-             */
-            init: function (opts) {
-                // ensure an image and container have been passed in
-                if (_helpers.isUndefinedElem(opts.img) || _helpers.isUndefinedElem(opts.container)) {
-                    return;
+            prep: function (opts) {
+                // handle function variant for the container
+                if (typeof opts.container === 'function') {
+                    opts.container = opts.container.call(opts.img);
                 }
-                // select first image if there are multiple (or jQuery object)
-                if (opts.img.length) {
-                    opts.img = opts.img[0];
+                // ensure the container exists
+                if (_helpers.isUndefinedElem(opts.container)) {
+                    return;
                 }
                 // select first container if there are multiple
                 if (opts.container.length) {
@@ -247,6 +262,27 @@ window.imageFit = window.imageFit || new function ($) {
                 }
                 // initialise checks
                 _module.run(_helpers.merge(_defaults, opts), true);
+            },
+
+            /*
+             * Add classes to image based on image and container aspect ratio comparison
+             * @param img {element(s)}
+             * @param opts {object}: see _defaults above for properties
+             */
+            init: function (img, opts) {
+                var i = 0;
+                // ensure an image has been passed in
+                if (_helpers.isUndefinedElem(img)) {
+                    return;
+                }
+                // start prep - include image within main object
+                if (img.length) {
+                    for (i = 0; i < img.length; i += 1) {
+                        _module.prep(_helpers.merge(_defaults, opts, { img: img[i] }));
+                    }
+                } else {
+                    _module.prep(_helpers.merge(_defaults, opts, { img: img }));
+                }
             }
         };
 
@@ -261,14 +297,13 @@ window.imageFit = window.imageFit || new function ($) {
     // create jQuery plugin version
     if (_jqIncl) {
         $.fn.imageFit = function (opts) {
-            opts.img = this;
-            _module.init(opts);
+            _module.init(this, opts);
             return this;
         };
     }
 
-    return function (opts) {
-        _module.init(opts);
+    return function (img, opts) {
+        _module.init(img, opts);
     };
 
 }(window.jQuery);

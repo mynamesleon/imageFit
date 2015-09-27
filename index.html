@@ -19,12 +19,11 @@
         <script type="text/javascript" src="scripts/image-fit.min.js"></script>
         <script type="text/javascript">
             // example usage
-            window.imageFit({
-                // required properties
-                img: document.getElementById('example-img'),
+            window.imageFit(document.getElementById('example-img'), {
+                // required
                 container: document.getElementById('example-container'),
 
-                // optional properties
+                // optional
                 objectFit: true, // true by default
                 useMargins: /msie 7|msie 8/i.test(navigator.userAgent), // false by default
                 resize: true, // true by default,
