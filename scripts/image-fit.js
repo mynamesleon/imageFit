@@ -52,17 +52,23 @@ window.imageFit = window.imageFit || new function ($) {
             },
 
             /*
-             * Merge to objects
-             * @param t {object}: target
-             * @param o {object}: object to merge into target
+             * Merge objects
+             * @param {object(s)}: objects to merge together
              * @return {object}: new object from merge
              */
-            merge: function (t, o) {
-                var n = t,
-                    i;
-                for (i in o) {
-                    if (o.hasOwnProperty(i)) {
-                        n[i] = o[i];
+            merge: function () {
+                var a = arguments,
+                    n = {},
+                    i = 0,
+                    o,
+                    p;
+
+                for (i = 0; i < a.length; i += 1) {
+                    o = a[i];
+                    for (p in o) {
+                        if (o.hasOwnProperty(p)) {
+                            n[p] = o[p];
+                        }
                     }
                 }
                 return n;
