@@ -81,8 +81,11 @@ The `objectFit` property is true by default as, when it is supported, this means
 The function will check the image's `currentSrc` property where possible when detecting if the image has loaded, to allow for use of `srcset` or the `<picture>` element. If the image src is likely to change at different window widths (e.g. via the `<picture>` element), be sure to set `checkOnResize` to true, which will make the script always check that the current image src has loaded.
 
 ## Changelog
+v2.0.1
+- correction in default container function
+
 v2.0.0
-- added ability to have multiple images passed
+- added ability to have multiple images passed in
 - enabled the `onPreLoad` callback to be usable when `objectFit` is true and supported, on both load, and resize (if `resize` and `checkOnResize` options are both set to true)
 - enabled the `container` property to take a function which is given the image being used as its context
 - corrected bug where the default options were being altered after each use of the plugin
