@@ -74,13 +74,16 @@ If `objectFit` is set to true, and the browser supports the object-fit CSS prope
 ## Further Notes
 As of version 2, the plugin will work if multiple images are passed in - the options will be applied for each.
 
-The `container` property can be an element or function. If a function is used, it will need to return an element. If multiple elements are passed in (e.g. from a jQuery object), then only the first one will be used.
+The `container` property can be an element or function. If a function is used, it will be given the image as its context, and needs to return an element. If multiple elements are provided in (e.g. from a jQuery object), then only the first one will be used.
 
 The `objectFit` property is true by default as, when it is supported, this means that the resize check is not needed. However, it should be noted that applying object-fit may conflict with certain animations. E.g. in recent versions of Chrome (41 and up by my observations), using object-fit prevents an opacity transition. It also halts the object-fit property from applying until the opacity transition would have ended.
 
 The function will check the image's `currentSrc` property where possible when detecting if the image has loaded, to allow for use of `srcset` or the `<picture>` element. If the image src is likely to change at different window widths (e.g. via the `<picture>` element), be sure to set `checkOnResize` to true, which will make the script always check that the current image src has loaded.
 
 ## Changelog
+v2.0.2
+- removed unnecessary extra options merge
+
 v2.0.1
 - correction in default container function
 
@@ -89,3 +92,10 @@ v2.0.0
 - enabled the `onPreLoad` callback to be usable when `objectFit` is true and supported, on both load, and resize (if `resize` and `checkOnResize` options are both set to true)
 - enabled the `container` property to take a function which is given the image being used as its context
 - corrected bug where the default options were being altered after each use of the plugin
+
+v1.1.0
+- naming adjustment for classes being used
+- corrected bug where an empty array could be used for the elements and the module would still try to initialise
+
+v1.0.0
+- initial release

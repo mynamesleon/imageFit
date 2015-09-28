@@ -261,7 +261,7 @@ window.imageFit = window.imageFit || new function ($) {
                     opts.container = opts.container[0];
                 }
                 // initialise checks
-                _module.run(_helpers.merge(_defaults, opts), true);
+                _module.run(opts, true);
             },
 
             /*
