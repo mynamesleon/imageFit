@@ -294,8 +294,8 @@ window.imageFit = window.imageFit || new function ($) {
                 img = _helpers.handleElems(img);
                 // start prep - include image within main object
                 for (i = 0; i < img.length; i += 1) {
-                    if (toTrigger && typeof (opts = img[i].imageFitData) !== 'undefined') {
-                        _module.run(opts, false);
+                    if (toTrigger && typeof img[i].imageFitData !== 'undefined') {
+                        _module.run(img[i].imageFitData, false);
                     } else {
                         _module.prep(_helpers.merge(_defaults, opts, { img: img[i] }));
                     }
