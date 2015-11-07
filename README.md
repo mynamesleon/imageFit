@@ -58,10 +58,18 @@ $('#example-img').imageFit({
 });
 ```
 
+After imageFit has been initialised on an image, if a check needs to be triggered manually, this can be done by re-calling it and passing in the string 'update' instead of an options object, e.g.
+
+```js
+$('#example-img').imageFit('update');
+// or
+imageFit(document.getElementById('example-img'), 'update');
+```
+
 The callbacks are called in the context of the selected image, so `this` will reference the image.
 
 ### object-fit
-If `objectFit` is set to true, and the browser supports the object-fit CSS property, only the `onPreLoad` callback is usable (if the `resize` and `checkOnResize` options are true). This is because no image load or positioning checks are required in this instance, because object-fit can handle all of the image positioning without any further intervention. The `onPreLoad` function is still usable should you wish to set a different image src (for instance at specific breakpoints).
+If `objectFit` is set to true, and the browser supports the object-fit CSS property, only the `onPreLoad` callback will fire. This is because no image load or positioning checks are required in this instance, because object-fit can handle all of the image positioning without any further intervention. The `onPreLoad` function is still usable should you wish to set a different image src (for instance at specific breakpoints).
 
 ## Classes used
 - 'fitted' is added once the image has loaded and a calculation has been made
@@ -81,6 +89,9 @@ The `objectFit` property is true by default as, when it is supported, this means
 The function will check the image's `currentSrc` property where possible when detecting if the image has loaded, to allow for use of `srcset` or the `<picture>` element. If the image src is likely to change at different window widths (e.g. via the `<picture>` element), be sure to set `checkOnResize` to true, which will make the script always check that the current image src has loaded.
 
 ## Changelog
+v2.1.0
+- added ability to force trigger an image fit check by passing in the string 'update' instead of an options object
+
 v2.0.2
 - removed unnecessary extra options merge
 

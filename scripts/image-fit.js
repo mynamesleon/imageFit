@@ -37,7 +37,7 @@ window.imageFit = window.imageFit || new function ($) {
             objectFit: true, // use object-fit if supported
             useMargins: false, // apply negative marginTop or marginLeft equal to half height or half width of the image
             resize: true, // do checks on resize
-            checkOnResize: false, // do image load check on resize. Useful if image is likely to change via developer adjustment, picture element, etc.
+            checkOnResize: false, // do image load check on resize
 
             // callbacks
             onPreLoad: function () {}, // before image load check - will also fire on resize if checkOnResize is true
@@ -48,12 +48,24 @@ window.imageFit = window.imageFit || new function ($) {
         _helpers = {
 
             /*
-             * Check if element exists
-             * @param p {misc}
-             * @return {boolean}: if p is null or undefined, or has length of 0
+             * handle elements for consistent response
+             * @param elem {element(s)}: HTMLElement or HTMLCollection or jQuery object
+             * @return {array}: elements array
              */
-            isUndefinedElem: function (p) {
-                return typeof p === 'undefined' || p === null || p.length === 0;
+            handleElems: function (elem) {
+                var result = [],
+                    i = 0;
+
+                if (typeof elem !== 'undefined' && elem !== null) {
+                    if (typeof elem.length === 'undefined') { // handle single element
+                        result.push(elem);
+                    } else if (elem.length) { // handle multiple
+                        for (i = 0; i < elem.length; i += 1) {
+                            result.push(elem[i]);
+                        }
+                    }
+                }
+                return result;
             },
 
             /*
@@ -134,7 +146,7 @@ window.imageFit = window.imageFit || new function ($) {
 
                 /*
                  * Set functions to call on resize
-                 * @param data {object}: original data object from imageFit function
+                 * @param opts {object}: original data object from imageFit function
                  * @param toBindResize {boolean}: whether resize should be bound - true on initial check, false later
                  *      important for if checkOnResize is true
                  */
@@ -153,7 +165,7 @@ window.imageFit = window.imageFit || new function ($) {
 
                 /*
                  * Resize check to determine which function to fire - fired on resize end
-                 * @param {object}: original data object from imageFit function
+                 * @param opts {object}: original data object from imageFit function
                  */
                 check: function (opts) {
                     if (opts.checkOnResize) {
@@ -188,7 +200,7 @@ window.imageFit = window.imageFit || new function ($) {
              * Compare aspect ratio of image and container and set 'fitted-tall' or 'fitted-wide' class accordingly
              *      positioning adjustment expected from CSS
              *      if marginCheck is true, will apply negative marginTop or marginLeft accordingly
-             * @param {object}: original data object from imageFit function
+             * @param opts {object}: original data object from imageFit function
              */
             checkAndSet: function (opts) {
                 _helpers.removeClass(opts.img, 'fitted-tall fitted-wide');
@@ -218,8 +230,8 @@ window.imageFit = window.imageFit || new function ($) {
 
             /*
              * Add object-fit class if object-fit is supported - otherwise, check image load
-             * @param {object}: original data object from imageFit function
-             * @param {boolean}: whether to bind resize events or not - important for if img load is checked on resize
+             * @param opts {object}: original data object from imageFit function
+             * @param toBindResize {boolean}: whether to bind resize events or not - important for if img load is checked on resize
              */
             run: function (opts, toBindResize) {
                 var img = new Image();
@@ -247,20 +259,25 @@ window.imageFit = window.imageFit || new function ($) {
                 img.src = opts.img.currentSrc || opts.img.src;
             },
 
+            /*
+             * check and handle container from options
+             * @param opts {object}: original data object from imageFit function
+             */
             prep: function (opts) {
                 // handle function variant for the container
                 if (typeof opts.container === 'function') {
                     opts.container = opts.container.call(opts.img);
                 }
+                // handle passed in container(s)
+                opts.container = _helpers.handleElems(opts.container);
                 // ensure the container exists
-                if (_helpers.isUndefinedElem(opts.container)) {
+                if (!opts.container.length) {
                     return;
                 }
-                // select first container if there are multiple
-                if (opts.container.length) {
-                    opts.container = opts.container[0];
-                }
-                // initialise checks
+                // force use of first one
+                opts.container = opts.container[0];
+                // store data and initialise checks
+                opts.img.imageFitData = opts;
                 _module.run(opts, true);
             },
 
@@ -270,18 +287,18 @@ window.imageFit = window.imageFit || new function ($) {
              * @param opts {object}: see _defaults above for properties
              */
             init: function (img, opts) {
-                var i = 0;
-                // ensure an image has been passed in
-                if (_helpers.isUndefinedElem(img)) {
-                    return;
-                }
+                var i = 0,
+                    toTrigger = typeof opts === 'string' && opts === 'update';
+
+                // handle passed in image(s)
+                img = _helpers.handleElems(img);
                 // start prep - include image within main object
-                if (img.length) {
-                    for (i = 0; i < img.length; i += 1) {
+                for (i = 0; i < img.length; i += 1) {
+                    if (toTrigger && typeof (opts = img[i].imageFitData) !== 'undefined') {
+                        _module.run(opts, false);
+                    } else {
                         _module.prep(_helpers.merge(_defaults, opts, { img: img[i] }));
                     }
-                } else {
-                    _module.prep(_helpers.merge(_defaults, opts, { img: img }));
                 }
             }
         };
