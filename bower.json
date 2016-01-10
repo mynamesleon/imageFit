@@ -11,7 +11,7 @@
   ],
   "main": [
     "scripts/image-fit.min.js",
-    "styles/image-fit.core.css"
+    "styles/image-fit.css"
   ],
   "license": "GPL-3.0",
   "ignore": [
