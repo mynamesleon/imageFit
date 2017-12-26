@@ -1,7 +1,8 @@
 {
   "name": "imagefit",
   "version": "2.2.0",
-  "description": "A tiny, IE7 compatible, script to allow an image to fill its container without altering its aspect ratio",
+  "description":
+    "A tiny, IE7 compatible, script to allow an image to fill its container without altering its aspect ratio",
   "main": "dist/image-fit.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/mynamesleon/imageFit.git"
   },
-  "author": "Leon Slater",
+  "author": "Leon Slater <contact@mynamesleon.com> (http://www.mynamesleon.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mynamesleon/imageFit/issues"
