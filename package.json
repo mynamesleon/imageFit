@@ -11,7 +11,8 @@
     "type": "git",
     "url": "git+https://github.com/mynamesleon/imageFit.git"
   },
-  "author": "Leon Slater <contact@mynamesleon.com> (http://www.mynamesleon.com",
+  "author":
+    "Leon Slater <contact@mynamesleon.com> (http://www.mynamesleon.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mynamesleon/imageFit/issues"
