@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="no-js">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-        <title>Image Fit Example</title>
-        <script>
-            document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
-        </script>
-        <link rel="stylesheet" href="styles/image-fit.css" />
-    </head>
 
-    <body>
-        <div id="example-container" class="image-fit-container">
-            <img id="example-img" class="image-fit-img" alt="example image" src="http://lorempixel.com/1600/900/city/" />
-        </div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Image Fit Example</title>
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+    </script>
+    <link rel="stylesheet" href="dist/image-fit.css" />
+</head>
 
-        <script type="text/javascript" src="scripts/image-fit.min.js"></script>
-        <script type="text/javascript">
-            // example usage
-            window.imageFit(document.getElementById('example-img'), {
-                // required
-                container: document.getElementById('example-container'),
+<body>
+    <div id="example-container" class="image-fit-container">
+        <img id="example-img" class="image-fit-img" alt="example image" src="http://lorempixel.com/1600/900/city/" />
+    </div>
 
-                // optional
-                objectFit: true, // true by default
-                useMargins: /msie 7|msie 8/i.test(navigator.userAgent), // false by default
-                resize: true, // true by default,
-                checkOnResize: true, // false by default
+    <script type="text/javascript" src="dist/image-fit.js"></script>
+    <script type="text/javascript">
+        // example usage
+        window.imageFit(document.getElementById('example-img'), {
+            // required
+            container: document.getElementById('example-container'),
 
-                // callbacks
-                onPreLoad: function () {}, // before image load check - will also fire on resize if checkOnResize is true
-                onCheck: function () {}, // before aspect ratio check and classes are added
-                onSet: function () {} // after aspect ratio check and classes are added
-            });
-        </script>
-    </body>
+            // optional
+            objectFit: true, // true by default
+            useMargins: /msie 7|msie 8/i.test(navigator.userAgent), // false by default
+            resize: true, // true by default,
+            checkOnResize: true, // false by default
+
+            // callbacks
+            onPreLoad: function () { }, // before image load check - will also fire on resize if checkOnResize is true
+            onCheck: function () { }, // before aspect ratio check and classes are added
+            onSet: function () { } // after aspect ratio check and classes are added
+        });
+    </script>
+</body>
+
 </html>
